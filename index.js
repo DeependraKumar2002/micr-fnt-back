@@ -19,12 +19,14 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ Allow frontend to send/receive cookies
+// ✅ CORS setup: allow any origin
 app.use(
-    cors({
-        origin: "http://localhost:5173", // frontend url
-        credentials: true, // allow cookies
-    })
+  cors({
+    origin: (origin, callback) => {
+      callback(null, true); // allow any origin
+    },
+    credentials: true, // allow cookies / authorization headers
+  })
 );
 
 // -------------------- Routes --------------------
@@ -36,11 +38,11 @@ app.use("/api/ai", aiRouter);
 app.use("/api/review", reviewRouter);
 
 app.get("/", (req, res) => {
-    res.send("Hello From Server ✅");
+  res.send("Hello From Server ✅");
 });
 
 // -------------------- Start Server --------------------
 app.listen(port, () => {
-    console.log(`🚀 Server started on port ${port}`);
-    connectDb();
+  console.log(`🚀 Server started on port ${port}`);
+  connectDb();
 });
